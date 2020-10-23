@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Invoice Tracker</title>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+<body>{% csrf_token %}
+  <h1 style="font-size: large;">Welcome {{username}}</h1>
+  <h3>All Pending Invoices</h3>
+  {% if username == 'None' %}
+  <h1>Permission Denied</h1>
+  {% else %}
+  <table width="1000">
+  <tr style="font-size: large;">
+  <td>Invoice Name</td>
+  <td>Invoice Date</td>
+  <td>Invoice Amount</td>
+  {% if user_type == 'ADMIN' %}
+  <td>Change Status</td>
+  {% endif %}
+  </tr>
+  {% for invoice in invoices %}
+  <tr>
+  <td>{{ invoice.name }}</td>
+  <td>{{ invoice.date }}</td>
+  <td>{{ invoice.amount }}</td>
+  {% if user_type != 'ADMIN' %}
+  <td><a href="/invoices/{{username}}/delete/{{invoice.id}}"><button>Delete Invoice</button></a></td>
+  <td><a href="/invoices/{{username}}/edit/{{invoice.id}}"><button>Edit Invoice</button></a></td>
+  {% else %}
+  <td>
+  <select name="status" id="status">
+    <option value="APPROVED">Approve</option>
+    <option value="REJECTED">Reject</option>
+  </select>
+  </td>
+  <td><button onclick='updateStatus("{{invoice.id}}")'>Update Status</button></td>
+  {% endif %}
+  </tr>
+  {% endfor %}
+  </table>
+  <br/>
+  <br/>
+
+  {% if user_type != 'ADMIN' %}
+  <a href="/invoices/{{username}}/create-new"><button style="font-size: medium;">Create Invoice</button></a>
+  {% endif %}
+  <a href="/invoices/{{username}}/all-invoices"><button style="font-size:medium;">View Invoices</button></a>
+  <a href="/logout"><button style="font-size: medium;">Sign Out</button></a>
+  {% endif %}
+<script>
+function updateStatus(id)
+{   
+  var status = document.getElementById("status").value;
+  var url = "/invoices/{{username}}/updateStatus/"+id
+  $.post(url, {status: status, csrfmiddlewaretoken: '{{ csrf_token }}'})
+}
+</script>
+</body>
+</html>

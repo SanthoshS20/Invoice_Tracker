@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Invoice</title>
+</head>
+<body>
+<h2>Edit Invoice</h2>
+{% if username != 'None' %}
+<form name="invoice_update" action="/invoices/{{username}}/update/{{id}}" method="POST" onsubmit="return updateInvoiceValidate()">{% csrf_token %}
+  <h3>Invoice Name: </h3>
+  <input type="text" name="invoice_name" value="{{ invoice.name }}"/>
+  <h3>Invoice Date: </h3>
+  <input type="date" name="date" value="{{ invoice.date }}"/>
+  <h3>Amount: </h3>
+  <input type="number" name="amount" value="{{ invoice.amount }}"/>
+  <h3>Invoice Photo: </h3>
+  <input style="font-size: medium;" type="file" name="invoice_image" accept='image/*' value="{{ invoice.image }}"/>
+  <br/>
+  <br/>
+  <input style="font-size: medium;" type="submit" value="Update Invoice">
+{% else %}
+<h1>Permission Denied</h1>
+{% endif %}
+</form>
+<br/>
+<a href="/invoices/{{username}}"><button style="font-size: medium;">Home Page</button></a>
+<script>
+function updateInvoiceValidate()
+{
+  var invoice_name = document.forms["invoice_update"]["invoice_name"].value;
+  if(invoice_name.trim().length === 0)
+  {
+    alert("invoice_name should not be empty");
+    return false;
+  }
+  else
+  {
+    var date = document.forms["invoice_update"]["date"].value;
+    if(date == "")
+    {
+      alert("Date should not be empty");
+      return false;
+    }
+    else
+    {
+      var amount = document.forms['invoice_update']['amount'].value;
+      if(amount == 0 || amount == "")
+      {
+        alert('amount should not be empty');
+        return false;
+      }
+      else
+      {
+        var invoice_image = document.forms["invoice_update"]["invoice_image"].value;
+        if(invoice_image == "")
+        {
+          alert("invoice_image should not be empty");
+          return false;
+        }
+      }
+    }
+  }
+}
+</script>
+</body>
+</html>

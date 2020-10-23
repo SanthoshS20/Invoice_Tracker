@@ -1,0 +1,1 @@
+web: gunicorn wishmeonmybirthday.wsgi:application --log-file -

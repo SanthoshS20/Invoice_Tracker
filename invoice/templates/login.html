@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+<h1 align="center">Invoice Tracker</h1>
+<h1>Login</h1>
+<form name="login" action="" method="POST" onsubmit="return loginValidate()">{% csrf_token %}
+  <h3>Email ID: </h3>
+  <input type="email" name="email_id">
+  <h3>Password: </h3>
+  <input type="password" name="password">
+  <br/>
+  <br/>
+  <input style="font-size: medium;" type="submit" value="Login">
+</form>
+<br/>
+<a href="/signup"><button style="font-size: medium;">Sign Up</button></a>
+<script>
+function loginValidate()
+{
+  var email = document.forms["login"]["email_id"].value;
+  if(email.trim().length === 0)
+  {
+    alert("email should not be empty");
+    return false;
+  }
+  else
+  {
+    var password = document.forms['login']['password'].value;
+    if(password.trim().length === 0)
+    {
+      alert('Password should not be empty');
+      return false;
+    }
+  }
+}
+</script>
+</body>
+</html>

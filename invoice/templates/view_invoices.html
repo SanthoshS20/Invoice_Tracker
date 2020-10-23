@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View Invoices</title>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+<body>{% csrf_token %}
+<h2>All Invoices</h2>
+<h4>Start Date</h4>
+<input type="date" name="startDate" id="startdate">
+<h4>End Date</h4>
+<input type="date" name="endDate" id="enddate">
+<br/>
+<br/>
+<button style="font-size: medium;" onclick='filterInvoice()'>Filter</button>
+<br/>
+<br/>
+<h2>Total number of invoices: {{ total_invoices }}</h2>
+{% if username != 'None' %}
+<table border="2" width="800" style="padding: 3px">
+<tr>
+{% if user_type == 'ADMIN' %}
+<td>User Name</td>
+{% endif %}
+<td>Invoice Name</td>
+<td>Invoice Date</td>
+<td>Invoice Amount</td>
+</tr>
+{% for invoice in invoices %}
+<tr>
+{% if user_type == 'ADMIN' %}
+<td>{{ invoice.username }}</td>
+{% endif %}
+<td>{{ invoice.name }}</td>
+<td>{{ invoice.date }}</td>
+<td>{{ invoice.amount }}</td>
+{% if user_type == 'ADMIN' %}
+{% if invoice.status != 'PENDING' %}
+<td><a href="/invoices/{{username}}/delete/{{invoice.invoice_id}}"><button>Delete Invoice</button></a></td>
+<td><a href="/invoices/{{username}}/edit/{{invoice.invoice_id}}"><button>Edit Invoice</button></a></td>
+{% endif %}
+{% endif %}
+</tr>
+{% endfor %}
+<tr>
+<td>Total Amount</td>
+{% if user_type == 'ADMIN' %}
+<td></td>
+{% endif %}
+<td></td>
+<td>{{total_amount}}</td>
+</tr>
+</table>
+{% else %}
+<h1>Permission Denied</h1>
+{% endif %}
+<script>
+function filterInvoice()
+{   
+  window.alert("121212");
+  var start_date = document.getElementById("startdate").value;
+  var end_date = document.getElementById("enddate").value;
+  $.post('/invoices/{{username}}/filterInvoice/', {startdate: start_date, enddate : end_date, csrfmiddlewaretoken: '{{ csrf_token }}'});
+}
+</script>
+<br/>
+
+<a href="/invoices/{{username}}"><button style="font-size: medium;">Home Page</button></a>
+</body>
+</html>
